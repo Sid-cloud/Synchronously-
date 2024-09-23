@@ -1,0 +1,20 @@
+# models.py
+from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+import time
+
+class MyModel(models.Model):
+    name = models.CharField(max_length=50)
+
+@receiver(post_save, sender=MyModel)
+def my_model_saved(sender, instance, **kwargs):
+    print("Signal received: Starting heavy processing...")
+    time.sleep(5)  # Simulate a heavy task by sleeping for 5 seconds
+    print("Signal processing completed.")
+
+# Now if we save an instance of MyModel:
+if __name__ == "__main__":
+    my_instance = MyModel(name="Test")
+    my_instance.save()
+    print("Model save completed.")
